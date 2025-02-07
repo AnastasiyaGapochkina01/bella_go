@@ -4,7 +4,7 @@ pipeline {
   agent any
   environment {
     HOST = "compute-2.ru-central1.internal"
-    //DIR = "/var/go-server"
+    REPO = "anestesia01/bella-go"
   }
   stages {
     stage('Configure credentials') {
@@ -23,7 +23,7 @@ pipeline {
     stage('Build and Push image') {
       steps {
         script {
-          Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
+          Image = docker.build("${env.REPO}:${env.BUILD_ID}")
           docker.withRegistry('https://registry-1.docker.io', 'hub_token') {
               Image.push()
         }
@@ -37,7 +37,7 @@ pipeline {
                 sshCommand remote: remote, command: """
                   set -ex ; set -o pipefail
                   docker login -u ${USERNAME} -p ${PASSWORD}
-                  docker pull ${env.Image}
+                  docker pull "${env.REPO}:${env.BUILD_ID}"
               """
               }
             }
