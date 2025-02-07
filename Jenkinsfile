@@ -19,13 +19,10 @@ pipeline {
         }
       }
     }
-    stage('build') {
+    stage('Build and Push image') {
       steps {
-        sshCommand remote: remote, command: """
-          set -ex ; set -o pipefail
-          cd $DIR
-          docker build -t go-server .
-        """
+          def Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
+          Image.push()
       }
     }
   }
