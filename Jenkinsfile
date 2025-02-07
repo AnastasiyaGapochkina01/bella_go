@@ -61,7 +61,7 @@ pipeline {
     stage('Check service') {
         steps {
               script {
-                  sh 'curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}'
+                  sh """curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}"""
               }
         }
     }
