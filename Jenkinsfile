@@ -31,17 +31,16 @@ pipeline {
     }
     stage('Deploy') {
         steps {
-            withCredentials([usernamePassword([usernamePassword(credentialsId: 'hub_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            withCredentials([usernamePassword(credentialsId: 'hub_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               script {
                 sshCommand remote: remote, command: """
                   set -ex ; set -o pipefail
                   docker login -u ${USERNAME} -p ${PASSWORD}
                   docker pull ${env.Image}
               """
-          }
-          }
+              }
+            }
         }
     }
   }
 }
-
