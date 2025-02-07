@@ -23,7 +23,7 @@ pipeline {
       steps {
         script {
           def Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
-          docker.withRegistry('anestesia01/bella-go', 'hub_token') {
+          docker.withRegistry('https://index.docker.io/v1', 'hub_token') {
               Image.push()
         }
         }
