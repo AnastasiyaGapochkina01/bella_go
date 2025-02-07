@@ -21,9 +21,11 @@ pipeline {
     }
     stage('Build and Push image') {
       steps {
+        script {
           def Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
           docker.withRegistry('anestesia01/bella-go', 'docker-hub-token') {
               Image.push()
+        }
         }
       }
     }
