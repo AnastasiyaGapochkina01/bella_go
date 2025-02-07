@@ -3,7 +3,7 @@ def remote = [:]
 pipeline {
   agent any
   environment {
-    HOST = "compute-2.ru-central1.internal"
+    HOST = "158.160.67.241"
     REPO = "anestesia01/bella-go"
     SVC = "server-app"
     PORT = "9100"
