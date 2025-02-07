@@ -1,7 +1,10 @@
 def remote = [:]
-
+def git_url = "git@github.com:AnastasiyaGapochkina01/bella_go.git"
 pipeline {
   agent any
+   parameters {
+        gitParameter name: 'branch', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', selectedValue: 'NONE', quickFilterEnabled: true
+   }
   environment {
     HOST = "158.160.67.241"
     REPO = "anestesia01/bella-go"
@@ -23,6 +26,11 @@ pipeline {
             remote.allowAnyHosts = true
           }
         }
+      }
+    }
+    stage('Cloning repo') {
+      steps{
+        checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins_ssh_key', url: "$git_url"]]])
       }
     }
     stage('Build and Push image') {
