@@ -7,6 +7,9 @@ pipeline {
     REPO = "anestesia01/bella-go"
     SVC = "server-app"
     PORT = "9100"
+    TOKEN = credentials('telegram_token')
+    CHAT_ID = "641041957"
+    LINK = "<a href=\\\"${BUILD_URL}\\\">${JOB_NAME} #${BUILD_NUMBER}</a>"
   }
   stages {
     stage('Configure credentials') {
@@ -64,6 +67,23 @@ pipeline {
                   sh """curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}"""
               }
         }
+    }
+    post {
+      success {
+        script {
+          sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"${CHAT_ID}\", \"text\": \"${LINK}\n🟢 Deploy succeeded! \", \"parse_mode\": \"HTML\", \"disable_notification\": false}' \"https://api.telegram.org/bot${TOKEN}/sendMessage\""
+        }
+      }
+      failure {
+        script {
+          sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"${CHAT_ID}\", \"text\": \"${LINK}\n🔴 Deploy failure! \", \"parse_mode\": \"HTML\", \"disable_notification\": false}' \"https://api.telegram.org/bot${TOKEN}/sendMessage\""
+        }
+      }
+      aborted {
+        script {
+          sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"${CHAT_ID}\", \"text\": \"${LINK}\n⚪️ Deploy aborted! \", \"parse_mode\": \"HTML\", \"disable_notification\": false}' \"https://api.telegram.org/bot${TOKEN}/sendMessage\""
+        }
+      }    
     }
   }
 }
