@@ -2,8 +2,8 @@ def remote = [:]
 pipeline {
   agent any
   environment {
-    HOST = "89.169.168.67"
-    DIR = "/var/go-server"
+    HOST = "compute-2.ru-central1.internal"
+    //DIR = "/var/go-server"
   }
   stages {
     stage('Configure credentials') {
@@ -28,6 +28,19 @@ pipeline {
         }
         }
       }
+    }
+    stage('Deploy') {
+        steps {
+            withCredentials([usernamePassword([credentialsId: 'hub_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              script {
+                sshCommand remote: remote, command: """
+                  set -ex ; set -o pipefail
+                  docker login -u ${USERNAME} -p ${PASSWORD}
+                  docker pull ${env.Image}
+              """
+          }
+          }
+        }
     }
   }
 }
