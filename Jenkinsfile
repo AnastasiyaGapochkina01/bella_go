@@ -1,4 +1,5 @@
 def remote = [:]
+def Image
 pipeline {
   agent any
   environment {
@@ -22,7 +23,7 @@ pipeline {
     stage('Build and Push image') {
       steps {
         script {
-          def Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
+          Image = docker.build("anestesia01/bella-go:${env.BUILD_ID}")
           docker.withRegistry('https://registry-1.docker.io', 'hub_token') {
               Image.push()
         }
