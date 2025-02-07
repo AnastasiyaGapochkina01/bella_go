@@ -1,5 +1,5 @@
 def remote = [:]
-def status
+
 pipeline {
   agent any
   environment {
@@ -61,8 +61,7 @@ pipeline {
     stage('Check service') {
         steps {
               script {
-                  status = sh -c 'curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}'
-                  echo ${env.status}
+                  sh 'curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}'
               }
         }
     }
