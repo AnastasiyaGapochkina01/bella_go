@@ -68,6 +68,7 @@ pipeline {
               }
         }
     }
+}
     post {
       success {
         script {
@@ -85,5 +86,4 @@ pipeline {
         }
       }    
     }
-  }
 }
