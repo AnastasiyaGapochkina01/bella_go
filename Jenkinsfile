@@ -5,6 +5,7 @@ pipeline {
   environment {
     HOST = "compute-2.ru-central1.internal"
     REPO = "anestesia01/bella-go"
+    SVC = "server-app"
   }
   stages {
     stage('Configure credentials') {
@@ -30,7 +31,7 @@ pipeline {
         }
       }
     }
-    stage('Deploy') {
+    stage('Pull image') {
         steps {
             withCredentials([usernamePassword(credentialsId: 'hub_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               script {
@@ -38,6 +39,19 @@ pipeline {
                   set -ex ; set -o pipefail
                   docker login -u ${USERNAME} -p ${PASSWORD}
                   docker pull "${env.REPO}:${env.BUILD_ID}"
+              """
+              }
+            }
+        }
+    }
+    stage('Deploy server') {
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'hub_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              script {
+                sshCommand remote: remote, command: """
+                  set -ex ; set -o pipefail
+                  docker rm ${env.SVC} --force 2> /dev/null || true
+                  docker run -d -it -p 9100:9100 --name ${env.SVC} "${env.REPO}:${env.BUILD_ID}"
               """
               }
             }
