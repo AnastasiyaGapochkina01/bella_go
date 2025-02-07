@@ -62,6 +62,7 @@ pipeline {
         steps {
               script {
                   status = sh -c 'curl -s -o /dev/null -w "%{http_code}" ${env.HOST}:${env.PORT}'
+                  echo ${env.status}
               }
         }
     }
