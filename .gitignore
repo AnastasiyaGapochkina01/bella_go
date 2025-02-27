@@ -23,3 +23,5 @@ vendor/
 
 # Misc
 .DS_Store
+
+compose.yml
