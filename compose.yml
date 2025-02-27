@@ -1,7 +1,7 @@
 services:
   node:
-    image: ${NODE_IMG}
+    image: ${GO_IMG}
     container_name: ${SVC_NAME}
     ports:
-      - 3000:3000
+      - 9100:9100
     restart: always
