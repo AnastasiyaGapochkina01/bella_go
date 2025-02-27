@@ -69,7 +69,7 @@ pipeline {
                   export GO_IMG="${env.REPO}:${env.BUILD_ID}"
                   export SVC_NAME="${env.SVC}"
                   envsubst < compose.tmpl | sudo tee compose.yml
-                  docker compose up -d
+                  sudo docker compose up -d
               """
               }
             }
