@@ -68,7 +68,7 @@ pipeline {
                   sudo git fetch
                   export GO_IMG="${env.REPO}:${env.BUILD_ID}"
                   export SVC_NAME="${env.SVC}"
-                  sudo envsubst < compose.tmpl > compose.yml
+                  envsubst < compose.tmpl | sudo tee compose.yml
                   docker compose up -d
               """
               }
