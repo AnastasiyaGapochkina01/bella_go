@@ -63,6 +63,9 @@ pipeline {
               script {
                 sshCommand remote: remote, command: """
                   set -ex ; set -o pipefail
+                  if [ ! -d ${env.PRJ_DIR} ]; then
+                    sudo mkdir -p ${env.PRJ_DIR}
+                  fi
                   cd ${env.PRJ_DIR}
                   export GO_IMG="${env.REPO}:${env.BUILD_ID}"
                   export SVC_NAME="${env.SVC}"
