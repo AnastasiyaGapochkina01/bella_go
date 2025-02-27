@@ -6,13 +6,14 @@ pipeline {
         gitParameter name: 'branch', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', selectedValue: 'NONE', quickFilterEnabled: true
    }
   environment {
-    HOST = "158.160.67.241"
+    HOST = "62.84.121.137"
     REPO = "anestesia01/bella-go"
-    SVC = "server-app"
-    PORT = "9100"
-    TOKEN = credentials('telegram_token')
-    CHAT_ID = "641041957"
-    LINK = "<a href=\\\"${BUILD_URL}\\\">${JOB_NAME} #${BUILD_NUMBER}</a>"
+    SVC = "go-server"
+    PRJ_DIR = "/var/www/go-server"
+    //PORT = "9100"
+    //TOKEN = credentials('telegram_token')
+    //CHAT_ID = "641041957"
+    //LINK = "<a href=\\\"${BUILD_URL}\\\">${JOB_NAME} #${BUILD_NUMBER}</a>"
   }
   stages {
     stage('Configure credentials') {
@@ -62,8 +63,11 @@ pipeline {
               script {
                 sshCommand remote: remote, command: """
                   set -ex ; set -o pipefail
-                  docker rm ${env.SVC} --force 2> /dev/null || true
-                  docker run -d -it -p ${env.PORT}:${env.PORT} --name ${env.SVC} "${env.REPO}:${env.BUILD_ID}"
+                  cd ${env.PRJ_DIR}
+                  export GO_IMG="${env.REPO}:${env.BUILD_ID}"
+                  export SVC_NAME="${env.SVC}"
+                  envsubst < compose.tmpl > compose.yml
+                  docker compose up -d
               """
               }
             }
