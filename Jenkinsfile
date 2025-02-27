@@ -51,7 +51,7 @@ pipeline {
                 sshCommand remote: remote, command: """
                   set -ex ; set -o pipefail
                   docker login -u ${USERNAME} -p ${PASSWORD}
-                  docker pull "${env.REPO}:${env.BUILD_ID}"
+                  sudo docker pull "${env.REPO}:${env.BUILD_ID}"
               """
               }
             }
