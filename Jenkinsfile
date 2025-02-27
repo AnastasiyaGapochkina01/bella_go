@@ -6,7 +6,7 @@ pipeline {
         gitParameter name: 'branch', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', selectedValue: 'NONE', quickFilterEnabled: true
    }
   environment {
-    HOST = "62.84.121.137"
+    HOST = "158.160.92.181"
     REPO = "anestesia01/bella-go"
     SVC = "go-server"
     PRJ_DIR = "/var/www/go-server"
